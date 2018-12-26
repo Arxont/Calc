@@ -1,56 +1,52 @@
-
-
-import React, { Component } from 'react'
-import update from 'immutability-helper'
-import math from 'mathjs'
-import './App.css'
-import Display from './Display'
-import Button from './Button'
-import Buttons from './Buttons'
+import React, { Component } from "react";
+import update from "immutability-helper";
+import math from "mathjs";
+import "./App.css";
+import Display from "./Display";
+import Button from "./Button";
+import Buttons from "./Buttons";
 
 class App extends Component {
   constructor() {
-    super()
-    this.state = { operations: [] }
+    super();
+    this.state = { operations: [] };
   }
 
   calculateOperations = () => {
-    let result = this.state.operations.join('')
+    let result = this.state.operations.join("");
     if (result) {
-      result = math.eval(result)
-      result = math.format(result, { precision: 14 })
+      result = math.eval(result);
+      result = math.format(result, { precision: 14 });
       this.setState({
-        operations: [result],
-      })
+        operations: [result]
+      });
     }
-  }
+  };
   handleClick = e => {
-    const value = e.target.getAttribute('data-value')
-    switch (value) {
-      case 'clear':
-        this.setState({
-          operations: [],
-        })
-        break
-      case 'equal':
-        this.calculateOperations()
-        break
-      default:
-        const newOperations = update(this.state.operations, {
-          $push: [value],
-        })
-        this.setState({
-          operations: newOperations,
-        })
-        break
-    }
-  }
+    const value = e.target.getAttribute("data-value");
+    const newOperations = update(this.state.operations, {
+      $push: [value]
+    });
+    this.setState({
+      operations: newOperations
+    });
+  };
+  ClearAll = () => {
+    this.setState({
+      operations: []
+    });
+  };
+
+  Calculate = () => {
+    this.calculateOperations();
+  };
+
   render() {
     return (
       <div className="App">
         <Display data={this.state.operations} />
         <Buttons>
-          <Button onClick={this.handleClick} label="C" value="clear" />
+          <Button onClick={this.ClearAll} label="DEL" value="Clear" />
           <Button onClick={this.handleClick} label="7" value="7" />
           <Button onClick={this.handleClick} label="4" value="4" />
           <Button onClick={this.handleClick} label="1" value="1" />
@@ -70,9 +66,11 @@ class App extends Component {
 
           <Button onClick={this.handleClick} label="-" value="-" />
           <Button onClick={this.handleClick} label="+" size="2" value="+" />
-          <Button onClick={this.handleClick} label="=" size="2" value="equal" />
+          <Button onClick={this.Calculate} label="=" size="2" value="=" />
         </Buttons>
       </div>
-    )
+    );
   }
 }
+
+export default App;
